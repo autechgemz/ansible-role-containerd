@@ -3,3 +3,5 @@
 containerd_repokey: 'https://download.docker.com/linux/ubuntu/gpg'
 
 containerd_repourl: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu jammy stable'
+
+containerd_config_default: {}

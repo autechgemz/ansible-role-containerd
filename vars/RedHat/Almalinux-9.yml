@@ -3,3 +3,5 @@
 containerd_repokey: 'https://download.docker.com/linux/centos/gpg'
 
 containerd_repourl: 'https://download.docker.com/linux/centos/9/x86_64/stable/'
+
+containerd_config_default: {}
