@@ -1,0 +1,13 @@
+---
+- name: Debug config tasks
+  when: containerd_debug is defined and containerd_debug
+  block:
+    - name: Print containerd_config_options
+      ansible.builtin.debug:
+        var: containerd_config_options
+    - name: Print containerd_config_default
+      ansible.builtin.debug:
+        var: containerd_config_default
+    - name: Print containerd_config_merged
+      ansible.builtin.debug:
+        var: containerd_config_merged

@@ -1,0 +1,10 @@
+---
+
+containerd_repo_enabled: true
+
+containerd_package_name:
+  - containerd.io
+
+containerd_service_name: "containerd"
+
+containerd_config_file: "/etc/containerd/config.toml"

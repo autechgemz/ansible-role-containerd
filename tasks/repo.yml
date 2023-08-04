@@ -1,0 +1,36 @@
+---
+
+- name: Install tasks
+  tags:
+    - containerd_repo
+    - containerd
+  become: true
+  block:
+    - name: Debian os family
+      when: ansible_os_family == 'Debian'
+      block:
+        - name: APT key
+          ansible.builtin.get_url:
+            url: "{{ containerd_repokey }}"
+            dest: '/etc/apt/keyrings/docker.asc'
+            mode: '0644'
+            force: true
+
+        - name: APT repository
+          ansible.builtin.apt_repository:
+            repo: "{{ containerd_repourl }}"
+            filename: docker
+            update_cache: true
+            state: present
+
+    - name: RedHat os family
+      when: ansible_os_family == 'RedHat'
+      block:
+        - name: YUM repository
+          ansible.builtin.yum_repository:
+            name: docker
+            description: "Docker CE Stable - {{ ansible_architecture }}"
+            baseurl: "{{ containerd_repourl }}"
+            enabled: true
+            gpgcheck: true
+            gpgkey: "{{ containerd_repokey }}"

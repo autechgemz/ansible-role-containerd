@@ -1,0 +1,14 @@
+---
+
+- name: Service tasks
+  when: not ansible_check_mode
+  tags:
+    - containerd_service
+    - containerd
+  become: true
+  block:
+    - name: Manage service
+      ansible.builtin.service:
+        name: "{{ containerd_service_name }}"
+        state: "{{ containerd_service_ensure }}"
+        enabled: "{{ containerd_service_enable }}"

@@ -1,0 +1,22 @@
+---
+
+- name: Install tasks
+  when: not ansible_check_mode
+  tags:
+    - containerd_install
+    - containerd
+  become: true
+  block:
+
+    - name: Install packages
+      when: ansible_os_family == 'RedHat'
+      ansible.builtin.yum:
+        name: "{{ containerd_package_name }}"
+        state: "{{ containerd_package_ensure }}"
+
+    - name: Install packages
+      when: ansible_os_family == 'Debian'
+      ansible.builtin.apt:
+        name: "{{ containerd_package_name }}"
+        state: "{{ containerd_package_ensure }}"
+        force_apt_get: true

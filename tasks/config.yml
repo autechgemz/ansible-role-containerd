@@ -1,0 +1,33 @@
+---
+
+- name: Config tasks
+  tags:
+    - containerd_config
+    - containerd
+  become: true
+  block:
+    - name: Merge variables
+      ansible.builtin.set_fact:
+        containerd_config_merged: "{{ containerd_config_default | ansible.builtin.combine(containerd_config_options, recursive=True) }}"
+
+    - name: Debug variables
+      ansible.builtin.include_tasks: debug/config.yml
+      when: containerd_debug is defined and containerd_debug
+
+    - name: Generate config from variables
+      when: containerd_config_merged
+      ansible.builtin.template:
+        src: config.toml.j2
+        dest: "{{ containerd_config_file }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart containerd
+
+    - name: Generate config from default
+      when: not containerd_config_merged
+      ansible.builtin.shell: containerd config default > /etc/containerd/config.toml
+      args:
+        chdir: /etc/containerd
+        creates: config.toml
+      notify: Restart containerd

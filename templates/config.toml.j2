@@ -1,0 +1,42 @@
+# {{ ansible_managed }}
+{# TODO: replace from YAML to toml convert filter #}
+{% if containerd_config_merged is defined and containerd_config_merged %}
+{%   for keys, values in containerd_config_merged.items() %}
+{%     if values is mapping %}
+{{       '[' }}{{ keys }}{{ ']' }}
+{%       for key, value in values.items() %}
+{%         if value is mapping %}
+{{       '[' | indent(2, true) }}{{ key }}{{ ']' }}
+{%           for k, v in value.items() %}
+{%             if v is mapping %}
+{%             elif v is iterable and (values is not string and values is not mapping) %}
+{{               k | indent(2) }} = {% if v %}{{ v | list }}{% else %}{{ '[]' }}{{ '\n' }}{% endif %}
+{%             elif v is integer %}
+{{               k | indent(2, true) }} = {{ v }}
+{%             elif v is boolean %}
+{{               k | indent(2, true) }} = {{ v | bool | lower }}
+{%             else %}
+{{               k | indent(2, true) }} = "{{ v | string }}"
+{%             endif %}
+{%           endfor %}
+{%         elif value is iterable and (values is not string and values is not mapping) %}
+{{           key | indent(2, true) }} = {% if value %}{{ value | list }}{% else %}{{ '[]' }}{{ '\n' }}{% endif %}
+{%         elif value is integer %}
+{{           key | indent(2, true) }} = {{ value }}
+{%         elif value is boolean %}
+{{           key | indent(2, true) }} = {{ value | bool | lower }}
+{%         else %}
+{{           key | indent(2, true) }} = "{{ value | string }}"
+{%         endif %}
+{%       endfor %}
+{%     elif values is iterable and (values is not string and values is not mapping) %}
+{{       keys | indent(2, true) }} = {% if values %}{{ values | list }}{% else %}{{ '[]' }}{{ '\n' }}{% endif %}
+{%     elif values is integer %}
+{{       keys | indent(2, true) }} = {{ values }}
+{%     elif values is boolean %}
+{{       keys | indent(2, true) }} = {{ values | bool | lower }}
+{%     else %}
+{{       keys | indent(2, true) }} = "{{ values }}"
+{%     endif %}
+{%   endfor %}
+{% endif %}

@@ -1,0 +1,13 @@
+---
+
+containerd_debug: false
+
+containerd_package_ensure: "present"
+
+containerd_service_ensure: "started"
+
+containerd_service_enable: true
+
+containerd_config_default: {}
+
+containerd_config_options: {}
